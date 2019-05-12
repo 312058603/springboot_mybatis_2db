@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<p>账号：<input id="userAccount" type="text" name="username" value="wpx"/></p>
+<p>密码：<input id="userPassword" type="text" name="password" value="123456"/></p>
+<p><input type="submit" value="登录"/></p>
+</body>
+</html>
+<script src="../static/js/JSUtil.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    let userAccount = $("#userAccount").val();
+    let userPassword = $("#userPassword").val();
+    JSUtil.HttpUtil.jqAjaxFrom({
+        type:'post',
+        url:'/login',
+        data:{
+            userAccount:userAccount,
+            userPassword:userPassword
+        },
+        success:function (response) {
+            console.log(response);
+        }
+    });
+</script>

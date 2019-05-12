@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wpx.dao.test1.StudentDao">
+
+    <!--<resultMap id="User" type="com.wpx.entity.User">-->
+    <!--<result property="userAccount" column="userAccount" />-->
+    <!--<result property="userPassword" column="userPassword" />-->
+    <!--</resultMap>-->
+
+    <select id="selectAllStudent" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+		select
+		    studentId,
+            studentName,
+            studentAge,
+            studentSex,
+            studentHeight,
+            studentWeight,
+            studentHobby,
+            studentAddress from student
+	</select>
+
+    <insert id="insertStudent" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="studentId">
+        insert into student (studentName,studentAge,studentHeight,studentWeight,studentSex,studentHobby,studentAddress)
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentName!= null and studentName!=''">
+                #{studentName},
+            </if>
+            <if test="studentAge!= null and studentAge!=''">
+                #{studentAge},
+            </if>
+            <if test="studentHeight!= null and studentHeight!=''">
+                #{studentHeight},
+            </if>
+            <if test="studentWeight!= null and studentWeight!=''">
+                #{studentWeight},
+            </if>
+            <if test="studentSex!= null and studentSex!=''">
+                #{studentSex},
+            </if>
+            <if test="studentHobby!= null and studentHobby!=''">
+                #{studentHobby},
+            </if>
+            <if test="studentHobby!= null and studentHobby!=''">
+                #{studentAddress},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteStudentById" parameterType="java.util.Map">
+		delete from student where studentId=#{studentId}
+	</delete>
+
+    <delete id="deleteStudentByIds" parameterType="java.util.Map">
+        delete from student where studentId in
+        <foreach item="studentId" index="index" collection="studentIds" open="(" separator="," close=")">
+            (#{studentId})
+        </foreach>
+    </delete>
+
+    <update id="updateStudentById" parameterType="java.util.Map">
+        update student
+        <set>
+            <if test="studentName!= null and studentName!=''">
+                studentName=#{studentName},
+            </if>
+            <if test="studentAge!= null and studentAge!=''">
+                studentAge=#{studentAge},
+            </if>
+            <if test="studentHeight!= null and studentHeight!=''">
+                studentHeight=#{studentHeight},
+            </if>
+            <if test="studentWeight!= null and studentWeight!=''">
+                studentWeight=#{studentWeight},
+            </if>
+            <if test="studentSex!= null and studentSex!=''">
+                studentSex=#{studentSex},
+            </if>
+            <if test="studentHobby!= null and studentHobby!=''">
+                studentHobby=#{studentHobby},
+            </if>
+            <if test="studentHobby!= null and studentHobby!=''">
+                studentAddress=#{studentAddress},
+            </if>
+        </set>
+        where studentId=#{studentId}
+    </update>
+
+    <select id="selectStudentByPageIndex" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select
+            studentId,
+            studentName,
+            studentAge,
+            studentSex,
+            studentHeight,
+            studentWeight,
+            studentHobby,
+            studentAddress from student where
+            studentId like concat('%',#{like},'%')
+            or studentId like concat('%',#{like},'%')
+            or studentName like concat('%',#{like},'%')
+            or studentAge like concat('%',#{like},'%')
+            or studentSex like concat('%',#{like},'%')
+            or studentHeight like concat('%',#{like},'%')
+            or studentWeight like concat('%',#{like},'%')
+            or studentHobby like concat('%',#{like},'%')
+            or studentAddress like concat('%',#{like},'%')
+            order by ${sortName} ${sortOrder}
+            limit #{pageIndex},#{pageSize}
+    </select>
+
+    <select id="selectStudentCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1) from student
+    </select>
+
+</mapper>

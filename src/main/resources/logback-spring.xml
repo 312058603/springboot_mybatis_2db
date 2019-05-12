@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 second">
+
+    <!--参数配置开始-->
+    <!--应用名-->
+    <property name="appName" value="appName"/>
+    <!--日志输出文件夹路径-->
+    <property name="logFolderPath" value="D:/wpx/springboot-log"/>
+    <!--日志输出格式-->
+    <!--颜色值"%black","%red","%green","%yellow","%blue","%magenta","%cyan","%white","%grey","%boldRed","%boldGreen","%boldYellow","%boldBlue","%boldMagenta","%boldCyan","%boldWhite","%highlight"-->
+    <property name="consoleLogPattern" value="%red(时间:%d{yyyy-MM-dd HH:mm:ss}) %cyan(进程:[${PID:-}]) %green(线程:[%thread]) %highlight(级别:%-5level) %magenta(包名:%logger) 方法名:%method %black(行数:%line) %black(输出:%msg%n)"/>
+    <property name="fileLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${PID:-} [%thread] %-5level %logger %method %line console:%msg%n"/>
+    <!--字符集-->
+    <property name="logCharset" value="UTF-8"/>
+    <!--参数配置结束-->
+
+    <!--应用名-->
+    <contextName>${appName}</contextName>
+
+    <!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--控制台输出日志级别大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+        <encoder>
+            <Pattern>${consoleLogPattern}</Pattern>
+            <charset>${logCharset}</charset>
+        </encoder>
+    </appender>
+
+    <!-- info日志文件 -->
+    <appender name="debugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--只输出info级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${fileLogPattern}</Pattern>
+            <charset>${logCharset}</charset>
+        </encoder>
+        <!--当前输出日志文件路径-->
+        <file>${logFolderPath}/debug.log</file>
+        <!--日志归档处理-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${logFolderPath}/debug/%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <MaxHistory>15</MaxHistory>
+            <MaxFileSize>100MB</MaxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!-- info日志文件 -->
+    <appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--只输出info级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${fileLogPattern}</Pattern>
+            <charset>${logCharset}</charset>
+        </encoder>
+        <!--当前输出日志文件路径-->
+        <file>${logFolderPath}/info.log</file>
+        <!--日志归档处理-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${logFolderPath}/info/%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <MaxHistory>15</MaxHistory>
+            <MaxFileSize>100MB</MaxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!-- warn日志文件 -->
+    <appender name="warnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--只输出info级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${fileLogPattern}</Pattern>
+            <charset>${logCharset}</charset>
+        </encoder>
+        <!--当前输出日志文件路径-->
+        <file>${logFolderPath}/warn.log</file>
+        <!--日志归档处理-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${logFolderPath}/warn/%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>15</MaxHistory>
+            <MaxFileSize>100MB</MaxFileSize>
+        </rollingPolicy>
+    </appender>
+
+
+    <!-- error日志文件 -->
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--只输出error级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${fileLogPattern}</Pattern>
+            <charset>${logCharset}</charset>
+        </encoder>
+        <!--当前输出日志路径-->
+        <file>${logFolderPath}/error.log</file>
+        <!--日志归档处理-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${logFolderPath}/error/%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>15</MaxHistory>
+            <MaxFileSize>100MB</MaxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!--#Mybatis 控制台打印sql语句配置-->
+    <logger name="com.wpx.dao" level="debug" />
+
+    <!--基本日志输出配置-->
+    <root level="info">
+        <appender-ref ref="console"/>
+        <appender-ref ref="debugFile"/>
+        <appender-ref ref="infoFile"/>
+        <appender-ref ref="warnFile"/>
+        <appender-ref ref="errorFile"/>
+    </root>
+
+    <!--&lt;!&ndash;开发环境配置&ndash;&gt;-->
+    <!--<springProfile name="test">-->
+    <!--<root level="info">-->
+    <!--<appender-ref ref="console"/>-->
+    <!--<appender-ref ref="infoFile"/>-->
+    <!--<appender-ref ref="warnFile"/>-->
+    <!--<appender-ref ref="errorFile"/>-->
+    <!--</root>-->
+    <!--</springProfile>-->
+
+    <!--&lt;!&ndash;生产环境配置&ndash;&gt;-->
+    <!--<springProfile name="production">-->
+    <!--<root level="info">-->
+    <!--<appender-ref ref="console"/>-->
+    <!--<appender-ref ref="infoFile"/>-->
+    <!--<appender-ref ref="warnFile"/>-->
+    <!--<appender-ref ref="errorFile"/>-->
+    <!--</root>-->
+    <!--</springProfile>-->
+
+</configuration>
